@@ -1,0 +1,12 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true
+    },
+    "run" : {
+      "enabled" : true,
+      "path" : "run.sh"
+    }
+  },
+  "openLogOnRun" : "start"
+}

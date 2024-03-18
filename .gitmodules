@@ -1,0 +1,3 @@
+[submodule "static/www-fonts"]
+	path = static/www-fonts
+	url = https://github.com/xprueg/www-fonts.git

@@ -1,0 +1,7 @@
+{
+  "index.enabled" : true,
+  "index.symbolicate" : true,
+  "workspace.color" : 10,
+  "workspace.preview_type" : "custom",
+  "workspace.preview_url" : "local.xpr.org:10000"
+}

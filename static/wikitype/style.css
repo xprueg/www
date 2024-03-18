@@ -1,0 +1,52 @@
+[data-ctx-menu] {
+    dialog, ol, li {
+        margin: 0;
+        padding: 0;
+    }
+
+    dialog {
+        position: fixed;
+        cursor: default;
+        font-size: 16px;
+        font-family: monospace;
+
+        --icon-size: 20px;
+        &.no-icon {
+            --icon-size: 0px;
+        }
+    }
+
+    ol {
+        list-style: none;
+        display: grid;
+        grid-template-columns: var(--icon-size) 1fr min-content;
+        margin: .5em 0;
+
+        li {
+            display: grid;
+            grid-column: 1 / -1;
+            grid-template-columns: subgrid;
+
+            &[data-type=item] {
+                border-radius: .25em;
+                padding: .25em .5em;
+                margin: 0 .5em;
+
+                &:hover {
+                    color: white;
+                    background: black;
+                }
+
+                .shortcut {
+                    justify-self: flex-end;
+                }
+            }
+
+            &[data-type=divider] hr {
+                grid-column: 1 / -1;
+                margin: .5em 0;
+                border: 2px solid black;
+            }
+        }
+    }
+}

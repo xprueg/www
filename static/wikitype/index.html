@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf8>
+        <link rel=stylesheet href=wikitype/style>
+    </head>
+    <body>
+        <header>
+            <h1>WIKITYPE</h1>
+            <h2>Lausanne-Gare station</h2>
+            <menu>
+                <li>View</li>
+                <li data-ctx-menu=article
+                    data-ctx-menu-conf='[
+                        { "label": "Skip Article", "shortcut": "^N" },
+                        { "label": "Open in Wikipedia", "shortcut": "Enter" }
+                ]'>Article</li>
+                <li data-ctx-menu=language
+                    data-ctx-menu-conf='[
+                        { "label": "Deutsch" },
+                        { "label": "English" },
+                        { "label": "рускии" }
+                ]'>Languages</li>
+                <li>History</li>
+            </menu>
+        </header>
+
+        <script type=module>
+            class MenuPosition {
+                constructor(evt) {
+                    this.x = evt.clientX
+                    this.y = evt.clientY
+                }
+
+                apply_to(menu) {
+                    menu.style.left = `${this.x}px`
+                    menu.style.top = `${this.y}px`
+                }
+            }
+
+            class MenuConf {
+                constructor(json_str) {
+                    this.conf = JSON.parse(json_str)
+                }
+            }
+
+            class Menu {
+                constructor(evt) {
+                    const target = evt.target
+
+                    this.position = new MenuPosition(evt)
+                    this.conf = new MenuConf(target.dataset.ctxMenuConf)
+                    this.node = this.render()
+                }
+
+                destroy() {
+                    this.node.remove()
+                }
+
+                render() {
+                    const menu = document.createElement("dialog")
+                    const list = document.createElement("ol")
+
+                    menu.setAttribute("open", true)
+
+                    this.conf.conf.forEach(item_conf => {
+                        const item = MenuItemFactory.get(item_conf)
+                        list.append(item.node)
+                    })
+                    menu.append(list)
+
+                    this.position.apply_to(menu)
+
+                    return menu
+                }
+            }
+
+            class MenuItemDivider {
+                constructor() {
+                    this.node = new Range().createContextualFragment(`
+                        <li data-type=divider>
+                            <hr>
+                        </li>
+                    `)
+                }
+            }
+
+            class MenuItem {
+                constructor(item_conf) {
+                    this.node = new Range().createContextualFragment(`
+                        <li data-type=item>
+                            <div class=icon></div>
+                            <span class=label>${item_conf.label}</span>
+                            <span class=shortcut>${item_conf.shortcut ?? String()}</span>
+                        </li>
+                    `)
+                }
+            }
+
+            class MenuItemFactory {
+                static types = {
+                    divider: MenuItemDivider,
+                    undefined: MenuItem,
+                }
+                static get(conf) {
+                    return new MenuItemFactory.types[conf?.type](conf)
+                }
+            }
+
+            void new class CtxM {
+                active_menu = null
+
+                constructor() {
+                    const open = this.open.bind(this)
+
+                    for (const menu of document.querySelectorAll("[data-ctx-menu]"))
+                        menu.addEventListener("click", open)
+                }
+
+                open(evt) {
+                    evt.preventDefault()
+
+                    if (this.active_menu)
+                        this.active_menu.destroy()
+
+                    this.active_menu = new Menu(evt)
+                    evt.target.append(this.active_menu.node)
+                }
+            }
+        </script>
+
+        <main>
+            <article>
+                <span>Der Bahnhof Lausanne ist ein Schienenverkehrsknotenpunkt in der Waadtländer Hauptstadt Lausanne.</span>
+            </article>
+        </main>
+        <!--
+            Wikitype — Lausanne-Gare station (Article Name)
+
+            View
+                Enlargen Thumbnail [Tab]
+                ---
+                Increase Fontsize [^+]
+                Decrease Fontsize [^-]
+                ---
+                Theme
+                    Zensur
+                    Pro
+                    Alpha
+                    Note
+                    Terminal
+                    ---
+                    Font
+                        Theme Default
+                        ---
+                        Object Sans
+                        GT America LC Expanded
+                        JetBrains Mono
+
+            Article
+                Skip Article [^N]
+                Open in Wikipedia [Enter]
+
+            Languages
+                Deutsch
+                English
+                рускии
+
+            History
+                ^ Brea Hill
+                ^ River Allen, Cornwall
+                * Hendra Croft
+            -->
+
+        <script src=wikitype/script type=module></script>
+    </body>
+</html>
